@@ -32,7 +32,7 @@
 
 Name:           slf4j
 Version:        1.5.8
-Release:        7%{?dist}
+Release:        8%{?dist}
 Epoch:          0
 Summary:        Simple Logging Facade for Java
 Group:          Development/Libraries
@@ -47,6 +47,8 @@ Source3:        slf4j-component-info.xml
 Source4:        %{name}-buildfiles.tar.bz2
 Patch0:         %{name}-pom_xml.patch
 Patch1:         slf4j-1.5.8-skip-integration-tests.patch
+Patch2:         slf4j-api-remove-dummy-impl.patch
+
 Requires(post): jpackage-utils >= 0:1.7.5
 Requires(postun): jpackage-utils >= 0:1.7.5
 BuildRequires:  jpackage-utils >= 0:1.7.5
@@ -176,6 +178,7 @@ for f in $(find -name MANIFEST.MF); do
     echo "Bundle-Version: %{version}" >> $f
 done
 %endif
+%patch2 -p1
 
 %build
 export MAVEN_REPO_LOCAL=$(pwd)/.m2/repository
@@ -326,6 +329,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_docdir}/%{name}-%{version}/site
 
 %changelog
+* Mon Jun 18 2012 Stanislav Ochotnicky <sochotnicky@redhat.com> - 0:1.5.8-8
+- Fix dummy implementation files in api jar 
+- Resolves: #831933
+
 * Mon Feb 15 2010 Alexander Kurtakov <akurtako@redhat.com> 0:1.5.8-7
 - Fix license.
 

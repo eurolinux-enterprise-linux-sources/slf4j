@@ -1,0 +1,27 @@
+diff --git a/slf4j-api/maven-build.xml b/slf4j-api/maven-build.xml
+index f9f5c32..0b4b009 100644
+--- a/slf4j-api/maven-build.xml
++++ b/slf4j-api/maven-build.xml
+@@ -214,11 +214,21 @@
+     </javadoc>
+   </target>
+ 
++ 
++  <!-- ====================================================================== -->
++  <!-- Removing slf4j-api's dummy StaticLoggerBinder and StaticMarkerBinder   -->
++  <!-- ====================================================================== -->
++
++  <target name="clean-compile" depends="test" description="Removing slf4j-api's dummy StaticLoggerBinder and StaticMarkerBinder">
++       <delete dir="${maven.build.outputDir}/org/slf4j/impl"/>
++  </target>
++
++
+   <!-- ====================================================================== -->
+   <!-- Package target                                                         -->
+   <!-- ====================================================================== -->
+ 
+-  <target name="package" depends="compile,test" description="Package the application">
++  <target name="package" depends="clean-compile" description="Package the application">
+     <jar jarfile="${maven.build.dir}/${maven.build.finalName}.jar" 
+          compress="true" 
+          index="false" 
