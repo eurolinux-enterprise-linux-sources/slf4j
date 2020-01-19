@@ -30,7 +30,7 @@
 
 Name:           slf4j
 Version:        1.7.4
-Release:        3%{?dist}
+Release:        4%{?dist}
 Epoch:          0
 Summary:        Simple Logging Facade for Java
 Group:          Development/Libraries
@@ -39,6 +39,7 @@ License:        MIT and ASL 2.0
 URL:            http://www.slf4j.org/
 Source0:        http://www.slf4j.org/dist/%{name}-%{version}.tar.gz
 Source1:        http://www.apache.org/licenses/LICENSE-2.0.txt
+Patch0:         0001-Disallow-EventData-deserialization-by-default.patch
 BuildArch:      noarch
 
 BuildRequires:  jpackage-utils >= 0:1.7.5
@@ -92,6 +93,7 @@ This package provides documentation for %{name}.
 
 %prep
 %setup -q
+%patch0 -p1
 find . -name "*.jar" | xargs rm
 cp -p %{SOURCE1} APACHE-LICENSE
 
@@ -149,6 +151,9 @@ cp -pr target/site/* $RPM_BUILD_ROOT%{_defaultdocdir}/%{name}-manual-%{version}
 %doc LICENSE.txt APACHE-LICENSE
 
 %changelog
+* Tue Mar 20 2018 Michael Simacek <msimacek@redhat.com> - 0:1.7.4-4
+- Disallow EventData deserialization by default (CVE-2018-8088)
+
 * Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 01.7.4-3
 - Mass rebuild 2013-12-27
 

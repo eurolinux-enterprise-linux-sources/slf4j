@@ -1,0 +1,46 @@
+From 9d4e3462f17d135b5c928e2419a17bd444c3f2b4 Mon Sep 17 00:00:00 2001
+From: Michael Simacek <msimacek@redhat.com>
+Date: Mon, 19 Mar 2018 16:01:57 +0100
+Subject: [PATCH] Disallow EventData deserialization by default
+
+---
+ .../src/main/java/org/slf4j/ext/EventData.java     | 23 +++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
+
+diff --git a/slf4j-ext/src/main/java/org/slf4j/ext/EventData.java b/slf4j-ext/src/main/java/org/slf4j/ext/EventData.java
+index 4478e52..535c5c0 100644
+--- a/slf4j-ext/src/main/java/org/slf4j/ext/EventData.java
++++ b/slf4j-ext/src/main/java/org/slf4j/ext/EventData.java
+@@ -76,13 +76,22 @@ public class EventData implements Serializable {
+    */
+   @SuppressWarnings("unchecked")
+   public EventData(String xml) {
+-    ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes());
+-    try {
+-      XMLDecoder decoder = new XMLDecoder(bais);
+-      this.eventData = (Map<String, Object>) decoder.readObject();
+-    } catch (Exception e) {
+-      throw new EventException("Error decoding " + xml, e);
+-    }
++      if ("1".equals(System.getProperty("org.slf4j.ext.allowInsecureDeserialization"))) {
++          ByteArrayInputStream bais = new ByteArrayInputStream(xml.getBytes());
++          try {
++              XMLDecoder decoder = new XMLDecoder(bais);
++              this.eventData = (Map<String, Object>) decoder.readObject();
++          } catch (Exception e) {
++              throw new EventException("Error decoding " + xml, e);
++          }
++      } else {
++          throw new UnsupportedOperationException(
++                  "Constructing EventData from XML is vulnerable to remote " +
++                  "excution and is not allowed by default. If you're " +
++                  "completely sure the source data is trusted, you can enable " +
++                  "it by setting org.slf4j.ext.allowInsecureDeserialization " +
++                  "JVM property to 1");
++      }
+   }
+ 
+   /**
+-- 
+2.14.3
+
