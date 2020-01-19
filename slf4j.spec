@@ -30,7 +30,7 @@
 
 Name:           slf4j
 Version:        1.7.4
-Release:        2%{?dist}
+Release:        3%{?dist}
 Epoch:          0
 Summary:        Simple Logging Facade for Java
 Group:          Development/Libraries
@@ -149,6 +149,9 @@ cp -pr target/site/* $RPM_BUILD_ROOT%{_defaultdocdir}/%{name}-manual-%{version}
 %doc LICENSE.txt APACHE-LICENSE
 
 %changelog
+* Fri Dec 27 2013 Daniel Mach <dmach@redhat.com> - 01.7.4-3
+- Mass rebuild 2013-12-27
+
 * Fri Jun 28 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 0:1.7.4-2
 - Rebuild to regenerate API documentation
 - Resolves: CVE-2013-1571
